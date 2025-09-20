@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiCalendar } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -141,11 +142,21 @@ export default function BookingModal({ car, onClose }) {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Start Date & Time</label>
-              <input type="datetime-local" className="w-full border border-primary-300 rounded px-2 py-1 bg-gray-100" value={start} onChange={e => setStart(e.target.value)} min={new Date().toISOString().slice(0,16)} />
+              <div className="relative">
+                <input type="datetime-local" className="w-full border border-primary-300 rounded px-2 py-1 bg-gray-100 pr-10" value={start} onChange={e => setStart(e.target.value)} min={new Date().toISOString().slice(0,16)} />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-500 pointer-events-none">
+                  <FiCalendar size={20} />
+                </span>
+              </div>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">End Date & Time</label>
-              <input type="datetime-local" className="w-full border border-primary-300 rounded px-2 py-1 bg-gray-100" value={end} onChange={e => setEnd(e.target.value)} min={getMinEndDate()} />
+              <div className="relative">
+                <input type="datetime-local" className="w-full border border-primary-300 rounded px-2 py-1 bg-gray-100 pr-10" value={end} onChange={e => setEnd(e.target.value)} min={getMinEndDate()} />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-500 pointer-events-none">
+                  <FiCalendar size={20} />
+                </span>
+              </div>
             </div>
             {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
             <button className="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700 disabled:opacity-60" onClick={handleBook} disabled={loading}>{loading ? "Booking..." : "Confirm Booking"}</button>
