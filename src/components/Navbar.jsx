@@ -86,6 +86,41 @@ const Navbar = () => {
               )}
             </Link>
           ))}
+          {/* Show admin links if admin is logged in */}
+          {user && user.role === 'admin' && (
+            <>
+              <Link
+                to="/admin/users"
+                onClick={() => setOpen(false)}
+                className={`relative py-2 px-1 transition-colors duration-200 font-medium ${location.pathname === '/admin/users' ? 'text-purple-600' : 'text-gray-700 hover:text-purple-600'}`}
+              >
+                Users
+                {location.pathname === '/admin/users' && (
+                  <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} />
+                )}
+              </Link>
+              <Link
+                to="/admin/cars"
+                onClick={() => setOpen(false)}
+                className={`relative py-2 px-1 transition-colors duration-200 font-medium ${location.pathname === '/admin/cars' ? 'text-green-600' : 'text-gray-700 hover:text-green-600'}`}
+              >
+                Cars
+                {location.pathname === '/admin/cars' && (
+                  <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} />
+                )}
+              </Link>
+              <Link
+                to="/admin/bookings"
+                onClick={() => setOpen(false)}
+                className={`relative py-2 px-1 transition-colors duration-200 font-medium ${location.pathname === '/admin/bookings' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
+              >
+                Bookings
+                {location.pathname === '/admin/bookings' && (
+                  <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} />
+                )}
+              </Link>
+            </>
+          )}
         </div>
 
         {/* User Authentication Area */}
@@ -112,6 +147,7 @@ const Navbar = () => {
               >
                 Register
               </button>
+              {/* Admin Login button removed as requested */}
             </div>
           )}
         </div>

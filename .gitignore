@@ -33,7 +33,6 @@ Thumbs.db
 
 # Sensitive files
 secret*
-private*
 *.pem
 *.key
 *.crt

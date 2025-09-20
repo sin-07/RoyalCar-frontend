@@ -16,6 +16,10 @@ import Cars from './pages/Cars'
 import AvailableCars from './pages/AvailableCars'
 import CarDetails from './pages/CarDetails'
 import PrivateRoute from './components/PrivateRoute'
+import AdminDashboard from './admin/AdminDashboard'
+import AdminUsers from './admin/AdminUsers'
+import AdminCars from './admin/AdminCars'
+import AdminBookings from './admin/AdminBookings'
 
 function App() {
   return (
@@ -30,11 +34,16 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/cars" element={<Cars />} />
             <Route path="/cars/:id" element={<CarDetails />} />
+            {/* Admin routes */}
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/cars" element={<AdminCars />} />
+            <Route path="/admin/bookings" element={<AdminBookings />} />
             {/* Protected routes */}
             <Route element={<PrivateRoute />}>
-              <Route path="/register" element={<Register />} />
               <Route path="/available-cars" element={<AvailableCars />} />
               <Route path="/booking" element={<Booking />} />
             </Route>

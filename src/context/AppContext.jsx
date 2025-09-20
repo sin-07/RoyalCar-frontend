@@ -19,16 +19,28 @@ export const AppProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      
-      if (response.data.token && response.data.user) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        setToken(response.data.token);
-        setUser(response.data.user);
-        return true;
+      // If admin credentials, use admin login endpoint
+      if (email === 'aniket.singh9322@gmail.com' && password === '1234567') {
+        const response = await axios.post('/api/admin/login', { email, password });
+        if (response.data.token && response.data.admin) {
+          setToken(response.data.token);
+          setUser({ ...response.data.admin, role: 'admin' });
+          // Do NOT save admin in localStorage
+          return true;
+        }
+        return false;
+      } else {
+        // Normal user login
+        const response = await axios.post('/api/auth/login', { email, password });
+        if (response.data.token && response.data.user) {
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          setToken(response.data.token);
+          setUser(response.data.user);
+          return true;
+        }
+        return false;
       }
-      return false;
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
       return false;
@@ -49,13 +61,16 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       if (token) {
-        try {
-          const response = await axios.get('/api/auth/me');
-          setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
-        } catch (error) {
-          console.log('Auth check failed:', error);
-          logout();
+        // Only check /api/auth/me for non-admin users
+        if (!user || user.role !== 'admin') {
+          try {
+            const response = await axios.get('/api/auth/me');
+            setUser(response.data);
+            localStorage.setItem('user', JSON.stringify(response.data));
+          } catch (error) {
+            console.log('Auth check failed:', error);
+            logout();
+          }
         }
       } else {
         setUser(null);
