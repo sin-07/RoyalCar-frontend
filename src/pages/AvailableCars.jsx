@@ -26,27 +26,35 @@ export default function AvailableCarsPage() {
 
     // Fetch available cars
     const API_BASE_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+    console.log('Fetching available cars from API_BASE_URL:', API_BASE_URL);
+    console.log('Booking data:', bookingData);
     fetch(`${API_BASE_URL}/api/cars/available`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(bookingData)
     })
       .then(async (res) => {
+        console.log('Available cars API response status:', res.status);
         if (!res.ok) {
           let errorMsg = "Failed to fetch cars";
           try {
             const errData = await res.json();
             errorMsg = errData.message || errorMsg;
-          } catch (e) {}
+            console.error('Error response data:', errData);
+          } catch (e) {
+            console.error('Failed to parse error response:', e);
+          }
           throw new Error(errorMsg);
         }
         return res.json();
       })
       .then((data) => {
+        console.log('Available cars response:', data);
         setCars(data);
         setLoading(false);
       })
       .catch((err) => {
+        console.error('Error fetching available cars:', err);
         setError(err.message || "Could not fetch available cars.");
         setLoading(false);
       });

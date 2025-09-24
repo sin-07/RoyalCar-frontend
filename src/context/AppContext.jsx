@@ -13,8 +13,14 @@ export const AppProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Configure axios
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
-  axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : '';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_BASE_URL || 'https://royalcar-backend-ssqx.onrender.com';
+  console.log('AppContext: Configuring axios with baseURL:', API_BASE_URL);
+  axios.defaults.baseURL = API_BASE_URL;
+  
+  // Update axios authorization header when token changes
+  useEffect(() => {
+    axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : '';
+  }, [token]);
 
   // Login function
   const login = async (email, password) => {
@@ -25,6 +31,8 @@ export const AppProvider = ({ children }) => {
         if (response.data.token && response.data.admin) {
           setToken(response.data.token);
           setUser({ ...response.data.admin, role: 'admin' });
+          // Update axios authorization header immediately
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
           // Do NOT save admin in localStorage
           return true;
         }
@@ -37,6 +45,8 @@ export const AppProvider = ({ children }) => {
           localStorage.setItem('user', JSON.stringify(response.data.user));
           setToken(response.data.token);
           setUser(response.data.user);
+          // Update axios authorization header immediately
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
           return true;
         }
         return false;

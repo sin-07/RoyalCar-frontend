@@ -12,17 +12,25 @@ export default function CarsPage() {
 
   useEffect(() => {
     // Fetch cars and bookings in parallel
+    const API_BASE_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+    console.log('Fetching cars from API_BASE_URL:', API_BASE_URL);
     Promise.all([
-      fetch("/api/cars").then(res => res.json()),
-      fetch("/api/bookings/all").then(res => res.json()).catch(() => []) // Fallback to empty array if endpoint doesn't exist
+      fetch(`${API_BASE_URL}/api/cars`).then(res => {
+        console.log('Cars API response status:', res.status);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        return res.json();
+      }),
+      fetch(`${API_BASE_URL}/api/bookings/all`).then(res => res.json()).catch(() => []) // Fallback to empty array if endpoint doesn't exist
     ])
       .then(([carsData, bookingsData]) => {
+        console.log('Cars data received:', carsData);
         setCars(carsData);
         setBookings(bookingsData);
         setLoading(false);
       })
       .catch((err) => {
-        setError("Could not fetch cars.");
+        console.error('Error fetching cars:', err);
+        setError(`Could not fetch cars: ${err.message}`);
         setLoading(false);
       });
   }, []);
